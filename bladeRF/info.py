@@ -19,6 +19,10 @@ def get_fpga_size(dev):
     bladeRF.errors.check_retcode(err)
     return int(size[0])
 
-
-
+@cdef('int bladerf_get_timestamp(struct bladerf *dev, bladerf_module mod, uint64_t *timestamp);')
+def get_timestamp(dev, module):
+	timestamp = ffi.new('uint64_t *')
+	err = _cffi.lib.bladerf_get_timestamp(dev,module,timestamp)
+	bladeRF.errors.check_retcode(err)
+	return int(timestamp[0])
 

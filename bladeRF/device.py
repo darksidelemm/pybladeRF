@@ -149,6 +149,9 @@ class Module(object):
     def xb200_fpath(self, path):
         bladeRF.xb200_set_path(self.raw_device,self.module,path)
     
+    @property
+    def timestamp(self):
+        return bladeRF.get_timestamp(self.raw_device,self.module)   
 
     def stream(self, callback, num_buffers, format, num_samples,
                num_transfers, user_data=None):
