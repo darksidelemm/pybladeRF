@@ -170,7 +170,7 @@ def rx(device, stream, meta_data, samples, num_samples, user_data):
 stream = device.rx.stream(
     rx,
     num_buffers,
-    bladeRF.FORMAT_SC16_Q12,
+    bladeRF.FORMAT_SC16_Q11,
     num_samples,
     num_transfers,
 )

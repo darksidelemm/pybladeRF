@@ -2,19 +2,20 @@ import bladeRF
 from bladeRF import _cffi
 from bladeRF._cffi import ffi, cdef, ptop
 
+# Enumerations directly from libbladeRF.h, as of 2015-08-15
 cdef("""
-typedef enum
-{
-    BLADERF_MODULE_RX,  /**< Receive Module */
-    BLADERF_MODULE_TX   /**< Transmit Module */
-} bladerf_module;
-
+/**
+ * Sampling connection
+ */
 typedef enum {
     BLADERF_SAMPLING_UNKNOWN,  /**< Unable to determine connection type */
     BLADERF_SAMPLING_INTERNAL, /**< Sample from RX/TX connector */
     BLADERF_SAMPLING_EXTERNAL  /**< Sample from J60 or J61 */
 } bladerf_sampling;
 
+/**
+ * LNA gain options
+ */
 typedef enum {
     BLADERF_LNA_GAIN_UNKNOWN,    /**< Invalid LNA gain */
     BLADERF_LNA_GAIN_BYPASS,     /**< LNA bypassed - 0dB gain */
@@ -22,12 +23,100 @@ typedef enum {
     BLADERF_LNA_GAIN_MAX         /**< LNA Max Gain */
 } bladerf_lna_gain;
 
+/**
+ * LPF mode
+ */
 typedef enum {
     BLADERF_LPF_NORMAL,     /**< LPF connected and enabled */
     BLADERF_LPF_BYPASSED,   /**< LPF bypassed */
     BLADERF_LPF_DISABLED    /**< LPF disabled */
 } bladerf_lpf_mode;
 
+/**
+ * Module selection for those which have both RX and TX constituents
+ */
+typedef enum
+{
+    BLADERF_MODULE_RX,  /**< Receive Module */
+    BLADERF_MODULE_TX   /**< Transmit Module */
+} bladerf_module;
+
+/**
+ * Expansion boards
+ */
+typedef enum {
+    BLADERF_XB_NONE = 0,
+    BLADERF_XB_100,
+    BLADERF_XB_200
+} bladerf_xb ;
+
+/**
+ * XB 200 filterbanks
+ */
+typedef enum {
+    BLADERF_XB200_50M = 0,
+    BLADERF_XB200_144M,
+    BLADERF_XB200_222M,
+    BLADERF_XB200_CUSTOM
+} bladerf_xb200_filter;
+
+/**
+ * XB 200 signal paths
+ */
+typedef enum {
+    BLADERF_XB200_BYPASS = 0,
+    BLADERF_XB200_MIX
+} bladerf_xb200_path;
+
+/**
+ * DC Calibration Modules
+ */
+typedef enum
+{
+    BLADERF_DC_CAL_LPF_TUNING,
+    BLADERF_DC_CAL_TX_LPF,
+    BLADERF_DC_CAL_RX_LPF,
+    BLADERF_DC_CAL_RXVGA2
+} bladerf_cal_module;
+
+/**
+ * Correction parameter selection
+ *
+ * These values specify the correction parameter to modify or query when
+ * calling bladerf_set_correction() or bladerf_get_correction(). Note that the
+ * meaning of the `value` parameter to these functions depends upon the
+ * correction parameter.
+ *
+ */
+typedef enum
+{
+    /**
+     * Adjusts the in-phase DC offset via controls provided by the LMS6002D
+     * front end. Valid values are [-2048, 2048], which are scaled to the
+     * available control bits in the LMS device.
+     */
+    BLADERF_CORR_LMS_DCOFF_I,
+
+    /**
+     * Adjusts the quadrature DC offset via controls provided the LMS6002D
+     * front end. Valid values are [-2048, 2048], which are scaled to the
+     * available control bits.
+     */
+    BLADERF_CORR_LMS_DCOFF_Q,
+
+    /**
+     * Adjusts FPGA-based phase correction of [-10, 10] degrees, via a provided
+     * count value of [-4096, 4096].
+     */
+    BLADERF_CORR_FPGA_PHASE,
+
+    /**
+     * Adjusts FPGA-based gain correction of [0.0, 2.0], via provided
+     * values in the range of [-4096, 4096], where a value of 0 corresponds to
+     * a gain of 1.0.
+     */
+    BLADERF_CORR_FPGA_GAIN
+} bladerf_correction;
 """)
 
 @cdef('int bladerf_enable_module(struct bladerf *dev, '
@@ -200,3 +289,7 @@ def get_frequency(dev, module):
     bladeRF.errors.check_retcode(err)
     return int(frequency[0])
 
+@cdef('int bladerf_expansion_attach(struct bladerf *dev, bladerf_xb xb)')
+def bladerf_expansion_attach(dev, xb):
+    err = _cffi.lib.bladerf_expansion_attach(dev,xb)
+    bladeRF.errors.check_retcode(err)

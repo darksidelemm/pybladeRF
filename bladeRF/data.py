@@ -4,7 +4,7 @@ from bladeRF._cffi import ffi, cdef, ptop
 
 cdef("""
 typedef enum {
-    BLADERF_FORMAT_SC16_Q12, /**< Signed, Complex 16-bit Q12.
+    BLADERF_FORMAT_SC16_Q11, /**< Signed, Complex 16-bit Q12.
                                *  This is the native format of the DAC data.
                                *
                                *  Samples are interleaved IQ value pairs, where
@@ -50,11 +50,13 @@ typedef void *(*bladerf_stream_cb)(struct bladerf *dev,
                                    size_t num_samples,
                                    void *user_data);
 
-
+// Updated metadata struct, as of 2015-08-15
 struct bladerf_metadata {
     uint64_t timestamp;     /**< Timestamp (TODO format TBD) */
     uint32_t flags;         /**< Metadata format flags */
     uint32_t status;         /**< Metadata format status */
+    unsigned int actual_count;
+    uint8_t reserved[32];
 };
 
 """)
