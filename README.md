@@ -3,6 +3,7 @@ pybladeRF
 
 Python CFFI wrapper around libbladeRF
 
+Updated to support libbladeRF as of 2015-08-15.
 
 Install
 =======
