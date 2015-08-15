@@ -38,6 +38,12 @@ from .ctrl import (
     select_band,
     set_frequency,
     get_frequency,
+    expansion_attach,
+    expansion_get_attached,
+    xb200_set_filterbank,
+    xb200_get_filterbank,
+    xb200_set_path,
+    xb200_get_path
     )
 
 from .data import (
@@ -113,7 +119,7 @@ if has_numpy:
         """Return a numpy array of type complex64 from the samples."""
         return np.frombuffer(to_float_buffer(samples, num_samples), np.complex64)
 
-
+# Enums from libbladerf.h 
 MODULE_TX = lib.BLADERF_MODULE_TX
 MODULE_RX = lib.BLADERF_MODULE_RX
 
@@ -129,6 +135,23 @@ LNA_GAIN_MAX = lib.BLADERF_LNA_GAIN_MAX
 LPF_NORMAL = lib.BLADERF_LPF_NORMAL
 LPF_BYPASSED = lib.BLADERF_LPF_BYPASSED
 LPF_DISABLED = lib.BLADERF_LPF_DISABLED
+
+BLADERF_XB_NONE = lib.BLADERF_XB_NONE
+BLADERF_XB_100 = lib.BLADERF_XB_100
+BLADERF_XB_200 = lib.BLADERF_XB_200
+
+BLADERF_XB200_50M = lib.BLADERF_XB200_50M
+BLADERF_XB200_144M = lib.BLADERF_XB200_144M
+BLADERF_XB200_222M = lib.BLADERF_XB200_222M
+BLADERF_XB200_CUSTOM = lib.BLADERF_XB200_CUSTOM
+
+BLADERF_XB200_BYPASS = lib.BLADERF_XB200_BYPASS
+BLADERF_XB200_MIX = lib.BLADERF_XB200_MIX
+
+BLADERF_CORR_LMS_DCOFF_I = lib.BLADERF_CORR_LMS_DCOFF_I
+BLADERF_CORR_LMS_DCOFF_Q = lib.BLADERF_CORR_LMS_DCOFF_Q
+BLADERF_CORR_FPGA_PHASE = lib.BLADERF_CORR_FPGA_PHASE
+BLADERF_CORR_FPGA_GAIN = lib.BLADERF_CORR_FPGA_GAIN
 
 FORMAT_SC16_Q11 = lib.BLADERF_FORMAT_SC16_Q11
 

@@ -133,6 +133,23 @@ class Module(object):
         else:
             return bladeRF.set_txvga2(self.raw_device, gain)
 
+    @property
+    def xb200_filterbank(self):
+        return bladeRF.xb200_get_filterbank(self.raw_device,self.module)
+
+    @xb200_filterbank.setter
+    def xb200_filterbank(self, filter):
+        bladeRF.xb200_set_filterbank(self.raw_device,self.module,filter)
+
+    @property
+    def xb200_path(self):
+        return bladeRF.xb200_get_path(self.raw_device,self.module)
+
+    @xb200_path.setter
+    def xb200_fpath(self, path):
+        bladeRF.xb200_set_path(self.raw_device,self.module,path)
+    
+
     def stream(self, callback, num_buffers, format, num_samples,
                num_transfers, user_data=None):
         return Stream(self, self.module, callback,
@@ -201,6 +218,14 @@ class Device(object):
     @lna_gain.setter
     def lna_gain(self, gain):
         return bladeRF.set_lna_gain(self.raw_device, gain)
+
+    @property
+    def expansion(self):
+        return bladeRF.expansion_get_attached(self.raw_device)
+
+    @expansion.setter
+    def expansion(self, xb):
+        return bladeRF.expansion_attach(self.raw_device,xb)
 
     def __del__(self):
         bladeRF.close(self.raw_device)

@@ -289,7 +289,39 @@ def get_frequency(dev, module):
     bladeRF.errors.check_retcode(err)
     return int(frequency[0])
 
-@cdef('int bladerf_expansion_attach(struct bladerf *dev, bladerf_xb xb)')
-def bladerf_expansion_attach(dev, xb):
+
+@cdef('int bladerf_expansion_attach(struct bladerf *dev, bladerf_xb xb);')
+def expansion_attach(dev, xb):
     err = _cffi.lib.bladerf_expansion_attach(dev,xb)
     bladeRF.errors.check_retcode(err)
+
+@cdef('int bladerf_expansion_get_attached(struct bladerf *dev, bladerf_xb *xb);')
+def expansion_get_attached(dev):
+    xb = ffi.new('bladerf_xb *')
+    err = _cffi.lib.bladerf_expansion_get_attached(dev, xb)
+    bladeRF.errors.check_retcode(err)
+    return int(xb[0])
+
+@cdef('int bladerf_xb200_set_filterbank(struct bladerf *dev, bladerf_module mod, bladerf_xb200_filter filter);')
+def xb200_set_filterbank(dev, module, filter):
+    err = _cffi.lib.bladerf_xb200_set_filterbank(dev,module,filter)
+    bladeRF.errors.check_retcode(err)
+
+@cdef('int bladerf_xb200_get_filterbank(struct bladerf *dev, bladerf_module mod, bladerf_xb200_filter *filter);')
+def xb200_get_filterbank(dev,module):
+    filter = ffi.new('bladerf_xb200_filter *')
+    err = _cffi.lib.bladerf_xb200_get_filterbank(dev,module,filter)
+    bladeRF.errors.check_retcode(err)
+    return int(filter[0])
+
+@cdef('int bladerf_xb200_set_path(struct bladerf *dev, bladerf_module module, bladerf_xb200_path path);')
+def xb200_set_path(dev,module,path):
+    err = _cffi.lib.bladerf_xb200_set_path(dev,module,path)
+    bladeRF.errors.check_retcode(err)
+
+@cdef('int bladerf_xb200_get_path(struct bladerf *dev, bladerf_module module, bladerf_xb200_path *path);')
+def xb200_get_path(dev,module):
+    path = ffi.new('bladerf_xb200_path *')
+    err = _cffi.lib.bladerf_xb200_get_path(dev,module,path)
+    bladeRF.errors.check_retcode(err)
+    return int(path[0])
